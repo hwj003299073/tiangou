@@ -114,7 +114,7 @@
 
     <script>
         async function getQuote() {
-            const res = await fetch('/generate');
+            const res = await fetch('/jianheng');
             const data = await res.json();
             document.getElementById('quote').innerText = data.content;
         }
