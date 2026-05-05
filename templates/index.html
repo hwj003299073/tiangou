@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>舔狗语录生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #f6f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #ff4d75;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .quote-box {
+            background: #fff9fb;
+            border-left: 4px solid #ff4d75;
+            padding: 25px 20px;
+            border-radius: 10px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .generate {
+            background: #ff4d75;
+            color: white;
+        }
+
+        .generate:hover {
+            background: #ff3366;
+        }
+
+        .copy {
+            background: #f1f3f5;
+            color: #333;
+        }
+
+        .copy:hover {
+            background: #e2e6ea;
+        }
+
+        .tip {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐶 舔狗语录生成器</h1>
+        <p class="subtitle">每日一条，舔到心碎</p>
+
+        <div class="quote-box" id="quote">点击下方按钮生成语录</div>
+
+        <div class="buttons">
+            <button class="generate" onclick="getQuote()">随机生成</button>
+            <button class="copy" onclick="copyQuote()">一键复制</button>
+        </div>
+
+        <p class="tip">本工具仅供娱乐，请勿过度深情</p>
+    </div>
+
+    <script>
+        async function getQuote() {
+            const res = await fetch('/generate');
+            const data = await res.json();
+            document.getElementById('quote').innerText = data.content;
+        }
+
+        function copyQuote() {
+            const text = document.getElementById('quote').innerText;
+            navigator.clipboard.writeText(text);
+            alert('复制成功！快去发给Ta吧');
+        }
+    </script>
+</body>
+</html>
