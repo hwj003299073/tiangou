@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,206 +10,220 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
         }
+
         body {
-            background: #f6f7fb;
-            padding: 30px 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .diary-title {
-            font-size: 26px;
-            color: #ff4d75;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .diary-date {
-            text-align: center;
-            color: #666;
-            margin-bottom: 25px;
-        }
-        .diary-content {
-            background: #fff9fb;
-            border-left: 4px solid #ff4d75;
-            padding: 25px 20px;
-            border-radius: 10px;
-            font-size: 17px;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
             line-height: 1.8;
             color: #333;
+            background: #f9f9f9;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .date-title {
+            font-size: 24px;
+            font-weight: bold;
             margin-bottom: 20px;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #2c3e50;
         }
-        .btns {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
+
+        .diary-content {
+            font-size: 17px;
             margin-bottom: 40px;
+            color: #444;
+            min-height: 60px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px #eee;
         }
-        button {
-            padding: 11px 24px;
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .btn {
+            padding: 10px 25px;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
+            background-color: #ff8822;
+            color: #fff;
         }
-        .btn-pink {
-            background: #ff4d75;
-            color: white;
+
+        .divider {
+            border-bottom: 1px solid #ddd;
+            margin: 30px 0;
         }
-        .btn-gray {
-            background: #f1f3f5;
-            color: #333;
-        }
-        .comment-title {
-            font-size: 19px;
+
+        .notice-text,
+        .opinion-text {
+            font-size: 16px;
             margin-bottom: 15px;
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
+            color: #555;
         }
-        .comment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        .comment-form input,
-        .comment-form textarea {
-            padding: 12px;
-            border: 1px solid #ddd;
+
+        /* 评论区完整CSS */
+        .comment-section {
+            margin-top: 30px;
+            background: #fff;
+            padding: 25px;
             border-radius: 8px;
-            font-size: 15px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
         }
-        .comment-form textarea {
-            min-height: 100px;
+
+        .comment-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .comment-input-area input,
+        .comment-input-area textarea {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            background: #fdfdfd;
+        }
+
+        .comment-input-area textarea {
+            height: 100px;
             resize: vertical;
         }
-        .comment-form button {
-            background: #3498db;
-            color: white;
-            align-self: start;
+
+        .submit-btn {
+            padding: 9px 20px;
+            background-color: #ff8822;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
         }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
         .comment-item {
-            background: #f9f9f9;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 14px 0;
+            border-bottom: 1px dashed #eee;
         }
+
         .comment-name {
             font-weight: bold;
-            color: #ff4d75;
+            color: #2c3e50;
+            font-size: 15px;
             margin-bottom: 4px;
         }
-        .comment-text {
+
+        .comment-content {
             color: #444;
+            font-size: 14px;
             line-height: 1.6;
-        }
-        .tip {
-            text-align: center;
-            font-size: 13px;
-            color: #999;
-            margin-top: 20px;
         }
     </style>
 </head>
+
 <body>
+    <!-- 改成空标签，JS自动赋值 -->
+    <div class="date-title" id="autoDate"></div>
+    
+    <div class="diary-content" id="content">
+        点击换一换获取今日情感日记
+    </div>
+    <div class="button-group">
+        <button class="btn" id="changeBtn">换一换</button>
+    </div>
+    <div class="divider"></div>
+    <p class="notice-text">本版块为寻亦我的本人经历。如果有任何想说的，直接在下方说！</p>
+    <p class="opinion-text">都说有人看笑话，有人照镜子，其实这个东西在我看来是世间常态，人人都有过为爱卑微、满心执念的时刻，不必嘲讽，也不必轻视</p>
 
-<div class="container">
-    <h1 class="diary-title">寻亦🐶日记</h1>
-    <div class="diary-date" id="showDate"></div>
-
-    <div class="diary-content" id="diary">点击下方获取今日日记</div>
-
-    <div class="btns">
-        <button class="btn-pink" onclick="getDiary()">下一条</button>
-        <button class="btn-gray" onclick="copyText()">复制</button>
+    <div class="comment-section">
+        <div class="comment-title">评论区</div>
+        <div class="comment-input-area">
+            <input type="text" id="name" placeholder="请输入昵称" autocomplete="off">
+            <textarea id="commentContent" placeholder="说点什么..." autocomplete="off"></textarea>
+            <button class="submit-btn" id="submitComment">提交评论</button>
+        </div>
+        <div id="commentList"></div>
     </div>
 
-    <!-- 评论区 -->
-    <div class="comment-title">发表评论</div>
-    <div class="comment-form">
-        <input type="text" id="name" placeholder="输入你的姓名" required>
-        <textarea id="content" placeholder="输入评论内容" required></textarea>
-        <button onclick="postComment()">发表评论</button>
-    </div>
-
-    <div id="commentList"></div>
-
-    <div class="tip">仅供娱乐，请勿过度深情</div>
-</div>
-
-<script>
-    // 日期
-    document.getElementById("showDate").innerText = new Date().toLocaleDateString('zh-CN', {
-        year: 'numeric', month: 'long', day: 'numeric'
-    });
-
-    // 加载日记
-    async function getDiary() {
-        let res = await fetch('/jianheng');
-        let data = await res.json();
-        document.getElementById('diary').innerText = data.content;
-    }
-
-    // 复制
-    function copyText() {
-        let t = document.getElementById('diary').innerText;
-        navigator.clipboard.writeText(t);
-        alert('复制成功！');
-    }
-
-    async function loadComments() {
-        let res = await fetch('/api/comment/list');
-        let list = await res.json();
-        let html = '';
-        list.forEach(cm => {
-            html += `
-            <div class="comment-item">
-                <div class="comment-name">${cm.name}</div>
-                <div class="comment-text">${cm.content}</div>
-            </div>`;
-        });
-        document.getElementById('commentList').innerHTML = html;
-    }
-
-    async function postComment() {
-        let name = document.getElementById('name').value.trim();
-        let content = document.getElementById('content').value.trim();
-        if (!name || !content) {
-            alert('姓名和内容都不能为空');
-            return;
+    <script>
+        // 自动设置当前日期 格式：xxxx年xx月xx日
+        function setNowDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            // 补零 1→01
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            document.getElementById('autoDate').innerText = `${year}年${month}月${day}日`;
         }
 
-        let res = await fetch('/api/comment/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `name=${encodeURIComponent(name)}&content=${encodeURIComponent(content)}`
-        });
+        // 换一换
+        document.getElementById('changeBtn').onclick = async () => {
+            const res = await fetch('/jianheng');
+            const data = await res.json();
+            document.getElementById('content').innerText = data.content;
+        };
 
-        let data = await res.json();
-        if (data.ok) {
-            document.getElementById('name').value = '';
-            document.getElementById('content').value = '';
-            loadComments(); // 重新加载评论
-        } else {
-            alert(data.msg);
+        // 提交评论
+        document.getElementById('submitComment').onclick = async () => {
+            const name = document.getElementById('name').value.trim();
+            const content = document.getElementById('commentContent').value.trim();
+
+            if (!name || !content) {
+                alert('昵称和评论内容不能为空');
+                return;
+            }
+
+            const res = await fetch('/api/comment/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `name=${encodeURIComponent(name)}&content=${encodeURIComponent(content)}`
+            });
+
+            const data = await res.json();
+            if (data.ok) {
+                document.getElementById('commentContent').value = '';
+                loadComments();
+            } else {
+                alert(data.msg);
+            }
+        };
+
+        // 加载评论
+        async function loadComments() {
+            const res = await fetch('/api/comment/list');
+            const list = await res.json();
+            const html = list.map(item => `
+                <div class="comment-item">
+                    <div class="comment-name">${item.name}</div>
+                    <div class="comment-content">${item.content}</div>
+                </div>
+            `).join('');
+            document.getElementById('commentList').innerHTML = html;
         }
-    }
 
-    window.onload = function () {
-        loadComments();
-    };
-</script>
-
+        // 页面初始化
+        window.onload = () => {
+            setNowDate();     // 自动加载日期
+            document.getElementById('changeBtn').click();
+            loadComments();
+        };
+    </script>
 </body>
+
 </html>
