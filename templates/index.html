@@ -11,12 +11,10 @@
             box-sizing: border-box;
             font-family: "Microsoft YaHei", sans-serif;
         }
-
         body {
             background: #f6f7fb;
             padding: 30px 20px;
         }
-
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -25,21 +23,17 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
-
         .diary-title {
             font-size: 26px;
             color: #ff4d75;
             text-align: center;
             margin-bottom: 10px;
         }
-
         .diary-date {
             text-align: center;
             color: #666;
             margin-bottom: 25px;
-            font-size: 15px;
         }
-
         .diary-content {
             background: #fff9fb;
             border-left: 4px solid #ff4d75;
@@ -54,14 +48,12 @@
             align-items: center;
             justify-content: center;
         }
-
         .btns {
             display: flex;
             gap: 12px;
             justify-content: center;
             margin-bottom: 40px;
         }
-
         button {
             padding: 11px 24px;
             border: none;
@@ -69,18 +61,14 @@
             font-size: 16px;
             cursor: pointer;
         }
-
         .btn-pink {
             background: #ff4d75;
             color: white;
         }
-
         .btn-gray {
             background: #f1f3f5;
             color: #333;
         }
-
-        /* 评论区 */
         .comment-title {
             font-size: 19px;
             margin-bottom: 15px;
@@ -88,14 +76,12 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 8px;
         }
-
         .comment-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 30px;
         }
-
         .comment-form input,
         .comment-form textarea {
             padding: 12px;
@@ -103,36 +89,30 @@
             border-radius: 8px;
             font-size: 15px;
         }
-
         .comment-form textarea {
             min-height: 100px;
             resize: vertical;
         }
-
         .comment-form button {
             background: #3498db;
             color: white;
             align-self: start;
         }
-
         .comment-item {
             background: #f9f9f9;
             padding: 12px 15px;
             border-radius: 8px;
             margin-bottom: 10px;
         }
-
         .comment-name {
             font-weight: bold;
             color: #ff4d75;
             margin-bottom: 4px;
         }
-
         .comment-text {
             color: #444;
             line-height: 1.6;
         }
-
         .tip {
             text-align: center;
             font-size: 13px;
@@ -141,71 +121,95 @@
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1 class="diary-title">寻亦🐶日记</h1>
-        <div class="diary-date" id="showDate"></div>
 
-        <div class="diary-content" id="diary">点击下方获取今日日记</div>
+<div class="container">
+    <h1 class="diary-title">寻亦🐶日记</h1>
+    <div class="diary-date" id="showDate"></div>
 
-        <div class="btns">
-            <button class="btn-pink" onclick="getDiary()">下一条</button>
-            <button class="btn-gray" onclick="copyText()">复制</button>
-        </div>
+    <div class="diary-content" id="diary">点击下方获取今日日记</div>
 
-        <!-- 评论区 -->
-        <div class="comment-title">发表评论</div>
-        <div class="comment-form">
-            <input type="text" id="name" placeholder="请输入姓名" required>
-            <textarea id="content" placeholder="请输入评论内容" required></textarea>
-            <button onclick="postComment()">发表评论</button>
-        </div>
-
-        <div id="commentList"></div>
-
-        <div class="tip">仅供娱乐，请勿过度深情</div>
+    <div class="btns">
+        <button class="btn-pink" onclick="getDiary()">下一条</button>
+        <button class="btn-gray" onclick="copyText()">复制</button>
     </div>
 
-    <script>
-        // 显示当前日期
-        document.getElementById("showDate").innerText = new Date().toLocaleDateString('zh-CN', {
-            year: 'numeric', month: 'long', day: 'numeric'
+    <!-- 评论区 -->
+    <div class="comment-title">发表评论（所有人可见）</div>
+    <div class="comment-form">
+        <input type="text" id="name" placeholder="输入你的姓名" required>
+        <textarea id="content" placeholder="输入评论内容" required></textarea>
+        <button onclick="postComment()">发表评论</button>
+    </div>
+
+    <div id="commentList"></div>
+
+    <div class="tip">仅供娱乐，请勿过度深情</div>
+</div>
+
+<script>
+    // 日期
+    document.getElementById("showDate").innerText = new Date().toLocaleDateString('zh-CN', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    // 加载日记
+    async function getDiary() {
+        let res = await fetch('/jianheng');
+        let data = await res.json();
+        document.getElementById('diary').innerText = data.content;
+    }
+
+    // 复制
+    function copyText() {
+        let t = document.getElementById('diary').innerText;
+        navigator.clipboard.writeText(t);
+        alert('复制成功！');
+    }
+
+    async function loadComments() {
+        let res = await fetch('/api/comment/list');
+        let list = await res.json();
+        let html = '';
+        list.forEach(cm => {
+            html += `
+            <div class="comment-item">
+                <div class="comment-name">${cm.name}</div>
+                <div class="comment-text">${cm.content}</div>
+            </div>`;
+        });
+        document.getElementById('commentList').innerHTML = html;
+    }
+
+    async function postComment() {
+        let name = document.getElementById('name').value.trim();
+        let content = document.getElementById('content').value.trim();
+        if (!name || !content) {
+            alert('姓名和内容都不能为空');
+            return;
+        }
+
+        let res = await fetch('/api/comment/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `name=${encodeURIComponent(name)}&content=${encodeURIComponent(content)}`
         });
 
-        // 获取日记
-        async function getDiary() {
-            let res = await fetch('/jianheng');
-            let data = await res.json();
-            document.getElementById('diary').innerText = data.content;
-        }
-
-        // 复制
-        function copyText() {
-            let t = document.getElementById('diary').innerText;
-            navigator.clipboard.writeText(t);
-            alert('复制成功！');
-        }
-
-        // 发表评论（本地存储）
-        function postComment() {
-            let name = document.getElementById('name').value.trim();
-            let content = document.getElementById('content').value.trim();
-            if (!name || !content) return;
-
-            let list = document.getElementById('commentList');
-            let item = document.createElement('div');
-            item.className = 'comment-item';
-            item.innerHTML = `
-                <div class="comment-name">${name}</div>
-                <div class="comment-text">${content}</div>
-            `;
-            list.prepend(item);
-
-            // 清空
+        let data = await res.json();
+        if (data.ok) {
+            alert('评论发表成功！');
             document.getElementById('name').value = '';
             document.getElementById('content').value = '';
+            loadComments(); // 重新加载评论
+        } else {
+            alert(data.msg);
         }
-    </script>
+    }
+
+    window.onload = function () {
+        loadComments();
+    };
+</script>
+
 </body>
 </html>
