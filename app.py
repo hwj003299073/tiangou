@@ -33,7 +33,7 @@ def index():
     return render_template('index.html')
 
 # 生成语录接口
-@app.route('/云信是舔狗')
+@app.route('/jianhen')
 def generate():
     line = random.choice(dog_lines)
     return jsonify({"content": line})
