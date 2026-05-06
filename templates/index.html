@@ -135,7 +135,7 @@
     </div>
 
     <!-- 评论区 -->
-    <div class="comment-title">发表评论（所有人可见）</div>
+    <div class="comment-title">发表评论</div>
     <div class="comment-form">
         <input type="text" id="name" placeholder="输入你的姓名" required>
         <textarea id="content" placeholder="输入评论内容" required></textarea>
@@ -197,7 +197,6 @@
 
         let data = await res.json();
         if (data.ok) {
-            alert('评论发表成功！');
             document.getElementById('name').value = '';
             document.getElementById('content').value = '';
             loadComments(); // 重新加载评论
