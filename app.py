@@ -1,9 +1,9 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import random
 
 app = Flask(__name__)
 
-# 舔狗语录库
+# 舔狗日记库
 dog_lines = [
     "我好像得了一种病，一不回我消息就心慌的病。",
     "你随便敷衍我吧，我不介意，我可以自己骗自己。",
@@ -32,11 +32,18 @@ dog_lines = [
 def index():
     return render_template('index.html')
 
-# 生成语录接口
+# 随机日记接口（给前端调用）
 @app.route('/jianheng')
 def generate():
     line = random.choice(dog_lines)
     return jsonify({"content": line})
+
+# 评论提交接口（可选，这里用前端本地存储即可）
+@app.route('/comment', methods=['POST'])
+def comment():
+    name = request.form.get('name')
+    content = request.form.get('content')
+    return jsonify({"status": "ok", "name": name, "content": content})
 
 if __name__ == '__main__':
     app.run(debug=True)
