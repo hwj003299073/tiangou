@@ -3,7 +3,7 @@ import random
 
 app = Flask(__name__)
 
-# 舔狗日记库
+# 舔狗语录库
 dog_lines = [
     "我好像得了一种病，一不回我消息就心慌的病。",
     "你随便敷衍我吧，我不介意，我可以自己骗自己。",
@@ -27,23 +27,40 @@ dog_lines = [
     "我不重要，你开心最重要。"
 ]
 
+# ====================== 全局评论列表（所有用户共享）======================
+comments = []
+
 # 首页
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# 随机日记接口（给前端调用）
+# 生成语录接口
 @app.route('/jianheng')
 def generate():
     line = random.choice(dog_lines)
     return jsonify({"content": line})
 
-# 评论提交接口（可选，这里用前端本地存储即可）
-@app.route('/comment', methods=['POST'])
-def comment():
-    name = request.form.get('name')
-    content = request.form.get('content')
-    return jsonify({"status": "ok", "name": name, "content": content})
+# ====================== 提交评论 ======================
+@app.route('/api/comment/add', methods=['POST'])
+def add_comment():
+    name = request.form.get('name', '').strip()
+    content = request.form.get('content', '').strip()
+    if not name or not content:
+        return jsonify({"ok": False, "msg": "姓名和内容不能为空"})
+    
+    # 插入到最前面，最新评论在最上
+    comments.insert(0, {
+        "name": name,
+        "content": content
+    })
+    return jsonify({"ok": True})
+
+# ====================== 获取所有评论 ======================
+@app.route('/api/comment/list')
+def get_comments():
+    return jsonify(comments)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # 允许局域网访问，别人连你WiFi也能打开！
+    app.run(host="0.0.0.0", port=5000, debug=True)
