@@ -89,7 +89,7 @@ def index():
 @app.route('/jianheng')
 def generate():
     line = random.choice(dog_lines)
-    return jsonify({"content": line})
+    return jsonify({"content": line}), 200, {"Content-Type": "application/json; charset=utf-8"}
 
 @app.route('/api/comment/add', methods=['POST'])
 def add_comment():
